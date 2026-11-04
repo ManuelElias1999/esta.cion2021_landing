@@ -192,16 +192,6 @@ $$("[data-anim]").forEach((el) => {
   setTimeout(start, 2600);
 })();
 
-// ================== ANIMACIONES AL HACER SCROLL ==================
-(() => {
-  const els = $$("[data-split], [data-anim], .reveal-img").filter((el) => !el.closest(".hero"));
-  if (!("IntersectionObserver" in window)) return els.forEach((e) => e.classList.add("is-in"));
-  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
-  }), { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
-  els.forEach((e) => io.observe(e));
-})();
-
 // ================== SCROLL: PROGRESO, FRASE, MARQUEE ==================
 (() => {
   const bar = $(".progress i");
@@ -235,37 +225,14 @@ $$("[data-anim]").forEach((el) => {
   requestAnimationFrame(loop);
 })();
 
-// ================== CURSOR PERSONALIZADO + BOTONES MAGNÉTICOS ==================
+// ================== BOTONES MAGNÉTICOS (sutil) ==================
 if (finePointer && !reduceMotion) {
-  document.documentElement.classList.add("cursor-on");
-  const ring = $(".cursor"), dot = $(".cursor-dot"), label = $(".cursor__label");
-  let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
-  addEventListener("pointermove", (e) => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.transform = `translate3d(${mx}px,${my}px,0)`;
-    const t = e.target.closest ? e.target : null;
-    const labeled = t && t.closest("[data-cursor]");
-    const text = labeled && labeled.getAttribute("data-cursor");
-    const link = t && t.closest("a, button, input, .chip, .day, .slot, .svc__row");
-    ring.classList.toggle("is-label", !!text && !t.closest("input"));
-    ring.classList.toggle("is-link", !text && !!link);
-    if (text) label.textContent = text;
-  });
-  document.addEventListener("pointerleave", () => ring.classList.add("is-hidden"));
-  document.addEventListener("pointerenter", () => ring.classList.remove("is-hidden"));
-  const follow = () => {
-    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
-    ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
-    requestAnimationFrame(follow);
-  };
-  follow();
-
   $$(".magnetic").forEach((el) => {
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect();
       const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
       el.style.transition = "transform 0.2s linear";
-      el.style.transform = `translate(${dx * 0.22}px, ${dy * 0.35}px)`;
+      el.style.transform = "translate(" + dx * 0.12 + "px, " + dy * 0.2 + "px)";
     });
     el.addEventListener("pointerleave", () => {
       el.style.transition = "transform 0.9s cubic-bezier(0.19,1,0.22,1)";
@@ -406,7 +373,6 @@ const Booking = (() => {
     li.className = "svc__row";
     li.tabIndex = 0;
     li.setAttribute("data-anim", "fade");
-    li.setAttribute("data-cursor", "Reservar");
     li.innerHTML = `
       <span class="svc__num">${pad(i + 1)}</span>
       <span class="svc__name">${s.nombre}</span>
@@ -575,3 +541,15 @@ const Booking = (() => {
 })();
 
 $("#year").textContent = new Date().getFullYear();
+
+// (al final, cuando servicios y productos ya existen)
+// ================== ANIMACIONES AL HACER SCROLL ==================
+(() => {
+  const els = $$("[data-split], [data-anim], .reveal-img").filter((el) => !el.closest(".hero"));
+  if (!("IntersectionObserver" in window)) return els.forEach((e) => e.classList.add("is-in"));
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+  }), { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+  els.forEach((e) => io.observe(e));
+})();
+
