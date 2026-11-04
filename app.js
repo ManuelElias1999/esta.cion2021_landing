@@ -83,7 +83,7 @@ const store = {
   const label = $(".design-tag__label", tag), name = $(".design-tag__name", tag);
   const defLabel = label.textContent, defName = name.textContent;
   let active = 0;
-  NailArt.buildHand($("#hand"), (design) => {
+  NailArt.buildHand($("#hand"), { onChange: (design) => {
     active += design ? 1 : -1;
     if (design) {
       label.textContent = "Diseño";
@@ -95,20 +95,8 @@ const store = {
       name.textContent = defName;
       tag.classList.remove("is-active");
     }
-  });
+  } });
 
-  const dust = $(".dust");
-  for (let i = 0; i < 34; i++) {
-    const s = document.createElement("i");
-    const z = 1.5 + Math.random() * 3;
-    const a = Math.random() * Math.PI * 2, r = 38 + Math.random() * 14;
-    Object.assign(s.style, {
-      width: `${z}px`, height: `${z}px`,
-      left: `${50 + Math.cos(a) * r}%`, top: `${44 + Math.sin(a) * r * 0.85}%`,
-      animationDelay: `${Math.random() * 4}s`, animationDuration: `${3 + Math.random() * 3}s`,
-    });
-    dust.appendChild(s);
-  }
 })();
 
 // ================== RESERVAS ==================
@@ -247,11 +235,11 @@ const Booking = (() => {
     card.className = "look reveal";
     card.style.transitionDelay = `${i * 80}ms`;
     card.innerHTML = `
-      <svg viewBox="22 -30 116 210" aria-hidden="true"></svg>
+      <div class="look__img"><svg aria-hidden="true"></svg></div>
       <h3>${d.nombre}</h3>
       <p>${d.desc}</p>
       <button class="btn btn--line" type="button">Lo quiero</button>`;
-    NailArt.renderNailCard($("svg", card), d.id);
+    NailArt.renderCard($("svg", card), d.id);
     $("button", card).addEventListener("click", () => Booking.elegir("Nail art", `Diseño: ${d.nombre}`));
     grid.appendChild(card);
   });
@@ -263,7 +251,7 @@ function productArt([kind, color = "#e8b4a6"]) {
   const k = ++artId;
   const glass = `<linearGradient id="gl${k}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".18" stop-color="#fff" stop-opacity=".55"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
   const gold = `<linearGradient id="go${k}" x1="0" x2="1"><stop offset="0" stop-color="#a8762e"/><stop offset=".3" stop-color="#f3d48f"/><stop offset=".6" stop-color="#b8863b"/><stop offset="1" stop-color="#e7c27a"/></linearGradient>`;
-  const body = `<linearGradient id="bd${k}" x1="0" x2="1"><stop offset="0" stop-color="${color}" stop-opacity=".95"/><stop offset=".5" stop-color="${color}"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>`;
+  const body = `<linearGradient id="bd${k}" x1="0" x2="1"><stop offset="0" stop-color="${color}" stop-opacity=".95"/><stop offset=".5" stop-color="${color}"/><stop offset="1" stop-color="#3a1f1c" stop-opacity=".22"/></linearGradient>`;
   const cap = `<linearGradient id="cp${k}" x1="0" x2="1"><stop offset="0" stop-color="#0d0c0c"/><stop offset=".3" stop-color="#3a3536"/><stop offset=".55" stop-color="#141213"/><stop offset="1" stop-color="#050505"/></linearGradient>`;
   const defs = `<defs>${glass}${gold}${body}${cap}</defs>`;
   const svg = (inner) => `<svg viewBox="0 0 100 140" aria-hidden="true">${defs}${inner}</svg>`;
