@@ -243,9 +243,10 @@ if (finePointer && !reduceMotion) {
 // ================== HERO: MANO ==================
 (() => {
   const text = $(".hero__caption-text"), num = $(".hero__caption-num");
-  const defText = text.textContent;
+  const defText = text.textContent, defNum = num.textContent;
   let active = 0;
   NailArt.buildHand($("#hand"), {
+    viewBox: "420 150 930 1111",
     onChange: (design) => {
       active += design ? 1 : -1;
       if (design) {
@@ -255,7 +256,7 @@ if (finePointer && !reduceMotion) {
         text.textContent = design.nombre;
       } else if (active <= 0) {
         active = 0;
-        num.textContent = "Diseño";
+        num.textContent = defNum;
         num.parentElement.parentElement.classList.remove("is-active");
         text.textContent = defText;
       }
