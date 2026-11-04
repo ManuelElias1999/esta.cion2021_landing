@@ -5,41 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Estación de uñas · by Dani Velasquez</title>
   <meta name="description" content="Estación de uñas by Dani Velasquez — Especialista en uñas acrílicas en Cochabamba, Bolivia. Reserva tu cita en línea y descubre nuestra tienda." />
-  <meta name="theme-color" content="#fbf7f4" />
+  <meta name="theme-color" content="#f6f0ea" />
   <meta property="og:title" content="Estación de uñas · by Dani Velasquez" />
   <meta property="og:description" content="¿Buscas un trabajo de calidad? ¡Estás en el lugar correcto! Especialista en uñas acrílicas 💅✨" />
   <meta property="og:image" content="assets/logo.png" />
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Great+Vibes&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
+  <!-- Pantalla de entrada -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <span class="loader__brand">Estación de uñas</span>
+      <span class="loader__by">by Dani Velasquez</span>
+      <span class="loader__bar"><i></i></span>
+    </div>
+  </div>
+
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
 
   <!-- ================= HEADER ================= -->
   <header class="header">
-    <div class="container header__inner">
+    <div class="wrap header__inner">
       <a href="#inicio" class="brand" aria-label="Estación de uñas — inicio">
-        <img src="assets/logo.png" alt="" class="brand__logo" width="44" height="44" />
-        <span class="brand__text">
-          <span class="brand__name">Estación de uñas</span>
-          <span class="brand__by">by Dani Velasquez</span>
-        </span>
+        <img src="assets/logo.png" alt="" class="brand__logo" width="48" height="48" />
+        <span class="brand__name">Estación de uñas</span>
       </a>
       <nav class="nav" aria-label="Principal">
-        <a href="#reservar">Reservas</a>
+        <a href="#estudio">Estudio</a>
         <a href="#servicios">Servicios</a>
-        <a href="#coleccion">Diseños</a>
+        <a href="#disenos">Diseños</a>
         <a href="#tienda">Tienda</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <div class="header__actions">
-        <button class="icon-btn cart-btn" type="button" aria-label="Ver carrito">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Zm4 0V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          <span class="cart-count" hidden>0</span>
+        <button class="cart-btn" type="button" aria-label="Ver tu pedido">
+          Pedido <span class="cart-count">0</span>
         </button>
-        <a href="#reservar" class="btn btn--dark btn--sm header__cta">Reservar</a>
+        <a href="#reservar" class="btn btn--ink btn--sm magnetic header__cta">Reservar cita</a>
         <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
       </div>
     </div>
@@ -48,163 +57,194 @@
   <main>
     <!-- ================= HERO ================= -->
     <section class="hero" id="inicio">
-      <div class="hero__glow" aria-hidden="true"></div>
-      <div class="container hero__grid">
+      <div class="wrap hero__grid">
         <div class="hero__copy">
-          <p class="eyebrow reveal">Nail studio · Cochabamba</p>
-          <h1 class="hero__title reveal">
-            <span class="hero__script">Estación de uñas</span>
-            Uñas que <em>enamoran</em>
+          <p class="kicker" data-anim="fade">Nail Studio — Cochabamba, Bolivia</p>
+          <h1 class="hero__title" data-split>
+            <span class="line">El arte</span>
+            <span class="line">de tus <em>manos</em></span>
           </h1>
-          <p class="hero__lead reveal">¿Buscas un trabajo de calidad? Estás en el lugar correcto. Especialistas en <strong>uñas acrílicas</strong>, diseños a tu medida y una atención dedicada solo a ti.</p>
-          <div class="hero__actions reveal">
-            <a href="#reservar" class="btn btn--dark">Reservar mi cita</a>
-            <a href="#tienda" class="btn btn--line">Ver la tienda</a>
+          <p class="hero__lead" data-anim="fade">¿Buscas un trabajo de calidad? Estás en el lugar correcto. Somos especialistas en <strong>uñas acrílicas</strong>: diseños a tu medida, acabado impecable y una atención dedicada solo a ti.</p>
+          <div class="hero__actions" data-anim="fade">
+            <a href="#reservar" class="btn btn--ink magnetic" data-cursor="Reservar">Reservar mi cita <span class="btn__arrow">→</span></a>
+            <a href="#disenos" class="link-arrow">Ver diseños</a>
           </div>
-          <dl class="hero__facts reveal">
-            <div><dt>1 h 30</dt><dd>por sesión</dd></div>
-            <div><dt>Acrílico</dt><dd>nuestra especialidad</dd></div>
-            <div><dt>A medida</dt><dd>diseño y largo</dd></div>
-          </dl>
+          <ul class="hero__meta" data-anim="fade">
+            <li><strong>1 h 30 min</strong><span>por sesión</span></li>
+            <li><strong>Acrílico</strong><span>nuestra especialidad</span></li>
+            <li><strong>Cochabamba</strong><span>con cita previa</span></li>
+          </ul>
         </div>
 
-        <div class="hero__visual">
-          <div class="arch-line" aria-hidden="true"></div>
-          <div class="frame"><svg id="hand" class="hand" role="group" aria-label="Mano interactiva: pasa el cursor sobre cada uña para ver un diseño"></svg></div>
-          <div class="design-tag" aria-live="polite">
-            <span class="design-tag__label">Pasa el cursor o toca las uñas</span>
-            <span class="design-tag__name">y descubre nuestros diseños ✦</span>
+        <figure class="hero__visual">
+          <div class="hero__photo reveal-img" data-cursor="Pintar">
+            <svg id="hand" class="hand" role="group" aria-label="Mano interactiva: pasa el cursor sobre cada uña para pintarla"></svg>
           </div>
-        </div>
+          <div class="badge" aria-hidden="true">
+            <svg viewBox="0 0 200 200">
+              <defs><path id="circlePath" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0" /></defs>
+              <text><textPath href="#circlePath" textLength="486" lengthAdjust="spacing">Pasa el cursor ✦ Pinta tus uñas ✦ Diseños ✦</textPath></text>
+            </svg>
+            <span class="badge__center">✦</span>
+          </div>
+          <figcaption class="hero__caption" aria-live="polite">
+            <span class="hero__caption-num">Fig. 01</span>
+            <span class="hero__caption-text">Pasa el cursor (o toca) cada uña</span>
+          </figcaption>
+        </figure>
       </div>
-      <a href="#reservar" class="scroll-cue" aria-label="Bajar a reservas"><span></span></a>
     </section>
 
     <!-- ================= MARQUEE ================= -->
     <div class="marquee" aria-hidden="true">
       <div class="marquee__track">
-        <span>Uñas acrílicas</span><i>✦</i><span>Nail art</span><i>✦</i><span>Semipermanente</span><i>✦</i><span>Francesa</span><i>✦</i><span>Baby boomer</span><i>✦</i><span>Efecto cromo</span><i>✦</i><span>Pedrería</span><i>✦</i>
-        <span>Uñas acrílicas</span><i>✦</i><span>Nail art</span><i>✦</i><span>Semipermanente</span><i>✦</i><span>Francesa</span><i>✦</i><span>Baby boomer</span><i>✦</i><span>Efecto cromo</span><i>✦</i><span>Pedrería</span><i>✦</i>
+        <span>Uñas acrílicas</span><i>✦</i><span class="o">Nail art</span><i>✦</i><span>Semipermanente</span><i>✦</i><span class="o">Francesa</span><i>✦</i><span>Baby boomer</span><i>✦</i><span class="o">Pedrería</span><i>✦</i>
+        <span>Uñas acrílicas</span><i>✦</i><span class="o">Nail art</span><i>✦</i><span>Semipermanente</span><i>✦</i><span class="o">Francesa</span><i>✦</i><span>Baby boomer</span><i>✦</i><span class="o">Pedrería</span><i>✦</i>
       </div>
     </div>
 
+    <!-- ================= ESTUDIO ================= -->
+    <section class="section studio" id="estudio">
+      <div class="wrap">
+        <p class="label" data-anim="fade"><span>01</span> El estudio</p>
+        <p class="statement" data-words>En Estación de uñas cada set se diseña a tu medida: la forma, el largo y el color pensados para ti. Trabajamos con materiales de calidad y el tiempo que tu manicura merece.</p>
+        <div class="pillars">
+          <article class="pillar" data-anim="fade">
+            <span class="pillar__num">I</span>
+            <h3>Especialistas en acrílico</h3>
+            <p>Estructura resistente y natural, en la forma que elijas: almendra, coffin, stiletto o cuadrada.</p>
+          </article>
+          <article class="pillar" data-anim="fade">
+            <span class="pillar__num">II</span>
+            <h3>Diseño personalizado</h3>
+            <p>Francesa, baby boomer, mármol, foil, pedrería o un diseño único creado para ti.</p>
+          </article>
+          <article class="pillar" data-anim="fade">
+            <span class="pillar__num">III</span>
+            <h3>Tiempo para ti</h3>
+            <p>Sesiones de aproximadamente 1 h 30 min, con cita previa, sin apuros.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SERVICIOS ================= -->
+    <section class="section services" id="servicios">
+      <div class="wrap">
+        <div class="head">
+          <p class="label" data-anim="fade"><span>02</span> Servicios</p>
+          <h2 class="title" data-split><span class="line">Menú de</span> <span class="line"><em>servicios</em></span></h2>
+        </div>
+        <ul class="svc" id="services-list"></ul>
+      </div>
+    </section>
+
+    <!-- ================= DISEÑOS ================= -->
+    <section class="section designs" id="disenos">
+      <div class="wrap head head--row">
+        <div>
+          <p class="label" data-anim="fade"><span>03</span> Colección</p>
+          <h2 class="title" data-split><span class="line">Diseños</span> <span class="line"><em>de la casa</em></span></h2>
+        </div>
+        <p class="head__note" data-anim="fade">Arrastra para ver más. Todos se adaptan a tu color, forma y largo.</p>
+      </div>
+      <div class="rail" id="designs-rail" data-cursor="Arrastra"></div>
+      <div class="wrap"><div class="rail-progress"><i></i></div></div>
+    </section>
+
     <!-- ================= RESERVAS ================= -->
     <section class="section booking" id="reservar">
-      <div class="container booking__grid">
+      <div class="wrap booking__grid">
         <div class="booking__intro">
-          <p class="eyebrow reveal">Reservas en línea</p>
-          <h2 class="title reveal">Tu momento,<br /><em>reservado</em></h2>
-          <p class="lead reveal">Elige el servicio, el día y la hora que mejor te quede. Cada sesión dura aproximadamente <strong>1 h 30 min</strong> para dedicarte el tiempo que mereces.</p>
-          <ol class="steps reveal">
-            <li><span>01</span><div><strong>Elige tu servicio</strong><p>Acrílicas, semipermanente, nail art y más.</p></div></li>
-            <li><span>02</span><div><strong>Escoge fecha y hora</strong><p>Bloques de 1 h 30 min.</p></div></li>
-            <li><span>03</span><div><strong>Confirma por WhatsApp</strong><p>Dani te responde para confirmar tu cita.</p></div></li>
-          </ol>
+          <p class="label" data-anim="fade"><span>04</span> Reservas</p>
+          <h2 class="title" data-split><span class="line">Reserva</span> <span class="line">tu <em>momento</em></span></h2>
+          <p class="lead" data-anim="fade">Elige el servicio, el día y la hora. Cada sesión dura aproximadamente <strong>1 h 30 min</strong>. Al confirmar, se abre WhatsApp con tu solicitud lista para enviar.</p>
+          <div class="booking__info" data-anim="fade">
+            <div><span>Dirección</span>Calle Wuayruru, entre Melchor Pérez y Lola Taborga</div>
+            <div><span>WhatsApp</span><a href="https://wa.me/59162628656" target="_blank" rel="noopener">+591 626 28656</a></div>
+          </div>
         </div>
 
-        <form class="planner reveal" id="booking-form" novalidate>
-          <div class="planner__step">
-            <h3 class="planner__label"><span>I.</span> Servicio</h3>
+        <form class="planner" id="booking-form" novalidate data-anim="fade">
+          <fieldset class="planner__step">
+            <legend><span>1</span> Servicio</legend>
             <div class="chips" id="service-chips" role="radiogroup" aria-label="Servicio"></div>
-          </div>
+          </fieldset>
 
-          <div class="planner__step">
-            <div class="planner__row">
-              <h3 class="planner__label"><span>II.</span> Fecha</h3>
-              <div class="days-nav">
-                <button type="button" class="days-nav__btn" data-dir="-1" aria-label="Días anteriores">‹</button>
-                <button type="button" class="days-nav__btn" data-dir="1" aria-label="Días siguientes">›</button>
-              </div>
+          <fieldset class="planner__step">
+            <legend><span>2</span> Fecha</legend>
+            <div class="days-wrap">
+              <button type="button" class="days-nav" data-dir="-1" aria-label="Días anteriores">←</button>
+              <div class="days" id="days" role="radiogroup" aria-label="Fecha"></div>
+              <button type="button" class="days-nav" data-dir="1" aria-label="Días siguientes">→</button>
             </div>
-            <div class="days" id="days" role="radiogroup" aria-label="Fecha"></div>
-          </div>
+          </fieldset>
 
-          <div class="planner__step">
-            <h3 class="planner__label"><span>III.</span> Hora</h3>
+          <fieldset class="planner__step">
+            <legend><span>3</span> Hora</legend>
             <div class="slots" id="slots" role="radiogroup" aria-label="Hora"></div>
-          </div>
+          </fieldset>
 
-          <div class="planner__step planner__fields">
-            <label class="field"><span>Tu nombre</span><input name="nombre" type="text" autocomplete="name" placeholder="Nombre y apellido" required /></label>
-            <label class="field"><span>Detalles <em>(opcional)</em></span><input name="nota" type="text" placeholder="Diseño, color, largo…" /></label>
-          </div>
+          <fieldset class="planner__step planner__fields">
+            <legend><span>4</span> Tus datos</legend>
+            <label class="field"><span>Nombre</span><input name="nombre" type="text" autocomplete="name" placeholder="Nombre y apellido" required /></label>
+            <label class="field"><span>Detalles (opcional)</span><input name="nota" type="text" placeholder="Diseño, color, largo…" /></label>
+          </fieldset>
 
           <div class="planner__summary">
             <p id="summary">Selecciona servicio, fecha y hora.</p>
-            <button type="submit" class="btn btn--dark">Confirmar por WhatsApp</button>
+            <button type="submit" class="btn btn--ink magnetic">Confirmar por WhatsApp <span class="btn__arrow">→</span></button>
           </div>
           <p class="form-error" role="alert" hidden></p>
         </form>
       </div>
     </section>
 
-    <!-- ================= SERVICIOS ================= -->
-    <section class="section services" id="servicios">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow reveal">Menú</p>
-          <h2 class="title reveal">Nuestros <em>servicios</em></h2>
-        </div>
-        <ul class="menu" id="services-menu"></ul>
-      </div>
-    </section>
-
-    <!-- ================= COLECCIÓN ================= -->
-    <section class="section collection" id="coleccion">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow reveal">Colección</p>
-          <h2 class="title reveal">Diseños <em>de la casa</em></h2>
-          <p class="lead reveal">Algunas ideas para inspirarte. Todos se pueden adaptar a tu color, forma y largo.</p>
-        </div>
-        <div class="collection__grid" id="collection-grid"></div>
-      </div>
-    </section>
-
     <!-- ================= TIENDA ================= -->
     <section class="section shop" id="tienda">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow reveal">Boutique</p>
-          <h2 class="title reveal">La <em>tienda</em></h2>
-          <p class="lead reveal">Productos profesionales para tus uñas. Arma tu pedido y envíalo por WhatsApp.</p>
+      <div class="wrap">
+        <div class="head head--row">
+          <div>
+            <p class="label" data-anim="fade"><span>05</span> Tienda</p>
+            <h2 class="title" data-split><span class="line">Productos</span> <span class="line"><em>profesionales</em></span></h2>
+          </div>
+          <div class="filters" id="filters" role="tablist" aria-label="Categorías" data-anim="fade"></div>
         </div>
-        <div class="filters reveal" id="filters" role="tablist" aria-label="Categorías"></div>
         <div class="products" id="products"></div>
       </div>
     </section>
 
-    <!-- ================= INSTAGRAM ================= -->
-    <section class="section social-cta">
-      <div class="container social-cta__inner reveal">
-        <img src="assets/logo.png" alt="Logo Estación de uñas by Dani Velasquez" class="social-cta__logo" width="140" height="140" loading="lazy" />
-        <p class="eyebrow">Síguenos</p>
-        <h2 class="title"><a href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener">@esta.cion2021</a></h2>
-        <p class="lead">Nuestros trabajos más recientes, novedades y promociones.</p>
-        <div class="social-cta__links">
-          <a class="btn btn--line" href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener">Instagram</a>
-          <a class="btn btn--line" href="https://www.facebook.com/profile.php?id=61564288067175" target="_blank" rel="noopener">Facebook</a>
+    <!-- ================= SOCIAL ================= -->
+    <section class="section social">
+      <div class="wrap social__inner">
+        <img src="assets/logo.png" alt="Logo Estación de uñas by Dani Velasquez" class="social__logo" width="132" height="132" loading="lazy" data-anim="fade" />
+        <p class="label label--center" data-anim="fade">Síguenos</p>
+        <a class="social__handle" href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener" data-cursor="Abrir" data-split><span class="line">@esta.cion2021</span></a>
+        <p class="lead lead--center" data-anim="fade">Nuestros trabajos más recientes, novedades y promociones.</p>
+        <div class="social__links" data-anim="fade">
+          <a class="btn btn--line magnetic" href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener">Instagram</a>
+          <a class="btn btn--line magnetic" href="https://www.facebook.com/profile.php?id=61564288067175" target="_blank" rel="noopener">Facebook</a>
         </div>
       </div>
     </section>
 
     <!-- ================= CONTACTO ================= -->
     <section class="section contact" id="contacto">
-      <div class="container contact__grid">
-        <div class="contact__info">
-          <p class="eyebrow reveal">Visítanos</p>
-          <h2 class="title reveal">Te <em>esperamos</em></h2>
-          <dl class="contact__list reveal">
-            <div><dt>Dirección</dt><dd>Calle Wuayruru, entre Melchor Pérez y Lola Taborga<br />Cochabamba, Bolivia</dd></div>
-            <div><dt>Celular · WhatsApp</dt><dd><a href="https://wa.me/59162628656" target="_blank" rel="noopener">+591 626 28656</a></dd></div>
-            <div><dt>Atención</dt><dd>Con cita previa · sesiones de 1 h 30 min</dd></div>
+      <div class="wrap contact__grid">
+        <div>
+          <p class="label" data-anim="fade"><span>06</span> Contacto</p>
+          <h2 class="title" data-split><span class="line">Te</span> <span class="line"><em>esperamos</em></span></h2>
+          <dl class="contact__list">
+            <div data-anim="fade"><dt>Dirección</dt><dd>Calle Wuayruru, entre Melchor Pérez y Lola Taborga — Cochabamba, Bolivia</dd></div>
+            <div data-anim="fade"><dt>Celular · WhatsApp</dt><dd><a href="https://wa.me/59162628656" target="_blank" rel="noopener">+591 626 28656</a></dd></div>
+            <div data-anim="fade"><dt>Atención</dt><dd>Con cita previa · sesiones de 1 h 30 min</dd></div>
           </dl>
-          <div class="contact__actions reveal">
-            <a class="btn btn--dark" href="https://wa.me/59162628656" target="_blank" rel="noopener">Escríbenos</a>
-            <a class="btn btn--line" href="https://www.google.com/maps/search/?api=1&query=Calle+Wuayruru+Melchor+Perez+Cochabamba+Bolivia" target="_blank" rel="noopener">Cómo llegar</a>
+          <div class="contact__actions" data-anim="fade">
+            <a class="btn btn--ink magnetic" href="https://wa.me/59162628656" target="_blank" rel="noopener">Escríbenos <span class="btn__arrow">→</span></a>
+            <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&query=Calle+Wuayruru+Melchor+Perez+Cochabamba+Bolivia" target="_blank" rel="noopener">Cómo llegar</a>
           </div>
         </div>
-        <div class="contact__map reveal">
+        <div class="contact__map reveal-img">
           <iframe title="Mapa: Estación de uñas" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Calle+Wuayruru,+Melchor+Perez,+Cochabamba,+Bolivia&output=embed"></iframe>
         </div>
@@ -213,13 +253,18 @@
   </main>
 
   <footer class="footer">
-    <div class="container footer__inner">
-      <span class="footer__brand">Estación de uñas</span>
-      <p>© <span id="year"></span> · by Dani Velasquez · Cochabamba, Bolivia</p>
-      <div class="footer__links">
-        <a href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.facebook.com/profile.php?id=61564288067175" target="_blank" rel="noopener">Facebook</a>
-        <a href="https://wa.me/59162628656" target="_blank" rel="noopener">WhatsApp</a>
+    <div class="wrap">
+      <div class="footer__top">
+        <a href="#reservar" class="footer__cta" data-cursor="Reservar">¿Lista para tu próxima cita? <em>Reserva aquí</em> →</a>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__brand">Estación de uñas</span>
+        <p>© <span id="year"></span> · by Dani Velasquez · Cochabamba, Bolivia</p>
+        <div class="footer__links">
+          <a href="https://www.instagram.com/esta.cion2021/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/profile.php?id=61564288067175" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://wa.me/59162628656" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -238,7 +283,7 @@
     <ul class="drawer__items" id="cart-items"></ul>
     <div class="drawer__foot">
       <div class="drawer__total" id="cart-total"></div>
-      <button class="btn btn--dark btn--block" id="cart-checkout" type="button">Enviar pedido por WhatsApp</button>
+      <button class="btn btn--ink btn--block" id="cart-checkout" type="button">Enviar pedido por WhatsApp</button>
     </div>
   </aside>
 

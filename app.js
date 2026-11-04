@@ -60,191 +60,6 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 
-// ================== HEADER / MENÚ ==================
-(() => {
-  const header = $(".header");
-  const onScroll = () => header.classList.toggle("is-scrolled", scrollY > 20);
-  addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-
-  const toggle = $(".nav-toggle"), nav = $(".nav");
-  const setOpen = (o) => {
-    nav.classList.toggle("is-open", o);
-    header.classList.toggle("menu-open", o);
-    toggle.setAttribute("aria-expanded", o);
-  };
-  toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
-  $$("a", nav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
-})();
-
-// ================== HERO: MANO ==================
-(() => {
-  const tag = $(".design-tag");
-  const label = $(".design-tag__label", tag), name = $(".design-tag__name", tag);
-  const defLabel = label.textContent, defName = name.textContent;
-  let active = 0;
-  NailArt.buildHand($("#hand"), { onChange: (design) => {
-    active += design ? 1 : -1;
-    if (design) {
-      label.textContent = "Diseño";
-      name.textContent = design.nombre;
-      tag.classList.add("is-active");
-    } else if (active <= 0) {
-      active = 0;
-      label.textContent = defLabel;
-      name.textContent = defName;
-      tag.classList.remove("is-active");
-    }
-  } });
-
-})();
-
-// ================== RESERVAS ==================
-const Booking = (() => {
-  const form = $("#booking-form");
-  const chips = $("#service-chips"), daysEl = $("#days"), slotsEl = $("#slots");
-  const summary = $("#summary"), error = $(".form-error", form);
-  const state = { servicio: null, fecha: null, hora: null };
-
-  const radio = (el, group) => {
-    $$("[role=radio]", group).forEach((b) => b.setAttribute("aria-checked", "false"));
-    el.setAttribute("aria-checked", "true");
-  };
-
-  // Servicios
-  SERVICIOS.forEach((s) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "chip"; b.textContent = s.nombre;
-    b.setAttribute("role", "radio"); b.setAttribute("aria-checked", "false");
-    b.addEventListener("click", () => { radio(b, chips); state.servicio = s.nombre; update(); });
-    chips.appendChild(b);
-  });
-
-  // Días
-  const fmtDia = new Intl.DateTimeFormat("es-BO", { weekday: "short" });
-  const fmtMes = new Intl.DateTimeFormat("es-BO", { month: "short" });
-  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-  for (let i = 0; i < DIAS_VISIBLES; i++) {
-    const d = new Date(hoy); d.setDate(hoy.getDate() + i);
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "day";
-    b.setAttribute("role", "radio"); b.setAttribute("aria-checked", "false");
-    b.innerHTML = `<small>${i === 0 ? "Hoy" : fmtDia.format(d).replace(".", "")}</small><strong>${d.getDate()}</strong><small>${fmtMes.format(d).replace(".", "")}</small>`;
-    b.setAttribute("aria-label", d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" }));
-    const horas = disponibles(d);
-    b.disabled = !horas.length;
-    b.addEventListener("click", () => { radio(b, daysEl); state.fecha = d; state.hora = null; renderSlots(); update(); });
-    daysEl.appendChild(b);
-  }
-  $$(".days-nav__btn").forEach((btn) => btn.addEventListener("click", () => {
-    daysEl.scrollBy({ left: Number(btn.dataset.dir) * daysEl.clientWidth * 0.8, behavior: "smooth" });
-  }));
-
-  function disponibles(d) {
-    const horas = HORARIOS[d.getDay()] || [];
-    if (iso(d) !== iso(new Date())) return horas;
-    const now = new Date(), min = now.getHours() * 60 + now.getMinutes() + 30;
-    return horas.filter((h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b > min; });
-  }
-
-  function renderSlots() {
-    slotsEl.innerHTML = "";
-    if (!state.fecha) {
-      slotsEl.innerHTML = `<p class="slots__empty">Primero elige una fecha.</p>`;
-      return;
-    }
-    const libres = disponibles(state.fecha);
-    (HORARIOS[state.fecha.getDay()] || []).forEach((h) => {
-      const b = document.createElement("button");
-      b.type = "button"; b.className = "slot";
-      b.setAttribute("role", "radio"); b.setAttribute("aria-checked", "false");
-      b.innerHTML = `${h}<small>hasta ${addMin(h, DURACION_CITA)}</small>`;
-      b.disabled = !libres.includes(h);
-      b.addEventListener("click", () => { radio(b, slotsEl); state.hora = h; update(); });
-      slotsEl.appendChild(b);
-    });
-  }
-  renderSlots();
-
-  function fechaLarga(d) {
-    return d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" });
-  }
-  function update() {
-    error.hidden = true;
-    const { servicio, fecha, hora } = state;
-    if (servicio && fecha && hora) {
-      summary.textContent = `${servicio} · ${fechaLarga(fecha)}, ${hora}`;
-      summary.classList.add("is-ready");
-    } else {
-      const falta = [!servicio && "servicio", !fecha && "fecha", !hora && "hora"].filter(Boolean);
-      summary.textContent = `Falta elegir: ${falta.join(", ")}.`;
-      summary.classList.remove("is-ready");
-    }
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const nombre = form.elements.nombre.value.trim();
-    const nota = form.elements.nota.value.trim();
-    const msg = !state.servicio ? "Elige un servicio." : !state.fecha ? "Elige una fecha." : !state.hora ? "Elige una hora." : !nombre ? "Escribe tu nombre." : "";
-    if (msg) { error.textContent = msg; error.hidden = false; if (!nombre && !msg.startsWith("Elige")) form.elements.nombre.focus(); return; }
-    openWhatsApp(
-      `Hola Dani ✨ Me gustaría reservar una cita:\n\n` +
-      `• Nombre: ${nombre}\n• Servicio: ${state.servicio}\n• Fecha: ${fechaLarga(state.fecha)}\n` +
-      `• Hora: ${state.hora} – ${addMin(state.hora, DURACION_CITA)}` +
-      (nota ? `\n• Detalles: ${nota}` : "") + `\n\n¿Está disponible? Gracias 💅`
-    );
-    toast("Te llevamos a WhatsApp para confirmar tu cita ✨");
-  });
-
-  return {
-    elegir(servicio, nota) {
-      const i = SERVICIOS.findIndex((s) => s.nombre === servicio);
-      if (i >= 0) $$(".chip", chips)[i].click();
-      if (nota) form.elements.nota.value = nota;
-      $("#reservar").scrollIntoView({ behavior: "smooth" });
-    },
-  };
-})();
-
-// ================== SERVICIOS ==================
-(() => {
-  const menu = $("#services-menu");
-  SERVICIOS.forEach((s, i) => {
-    const li = document.createElement("li");
-    li.className = "menu__item reveal";
-    li.tabIndex = 0;
-    li.innerHTML = `
-      <span class="menu__num">${pad(i + 1)}</span>
-      <span class="menu__name">${s.nombre}</span>
-      <span class="menu__price">${precioTxt(s.precio)}</span>
-      <p class="menu__desc">${s.desc} · aprox. 1 h 30 min</p>
-      <span class="menu__go">Reservar este servicio →</span>`;
-    const go = () => Booking.elegir(s.nombre);
-    li.addEventListener("click", go);
-    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
-    menu.appendChild(li);
-  });
-})();
-
-// ================== COLECCIÓN ==================
-(() => {
-  const grid = $("#collection-grid");
-  NailArt.DESIGNS.forEach((d, i) => {
-    const card = document.createElement("article");
-    card.className = "look reveal";
-    card.style.transitionDelay = `${i * 80}ms`;
-    card.innerHTML = `
-      <div class="look__img"><svg aria-hidden="true"></svg></div>
-      <h3>${d.nombre}</h3>
-      <p>${d.desc}</p>
-      <button class="btn btn--line" type="button">Lo quiero</button>`;
-    NailArt.renderCard($("svg", card), d.id);
-    $("button", card).addEventListener("click", () => Booking.elegir("Nail art", `Diseño: ${d.nombre}`));
-    grid.appendChild(card);
-  });
-})();
-
 // ================== ILUSTRACIONES DE PRODUCTOS ==================
 let artId = 0;
 function productArt([kind, color = "#e8b4a6"]) {
@@ -320,6 +135,338 @@ function productArt([kind, color = "#e8b4a6"]) {
   return svg("");
 }
 
+
+const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ================== HEADER / MENÚ ==================
+(() => {
+  const header = $(".header");
+  let lastY = scrollY;
+  const onScroll = () => {
+    const y = scrollY;
+    header.classList.toggle("is-scrolled", y > 20);
+    header.classList.toggle("is-hidden", y > 400 && y > lastY && !header.classList.contains("menu-open"));
+    lastY = y;
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  const toggle = $(".nav-toggle"), nav = $(".nav");
+  const setOpen = (o) => {
+    nav.classList.toggle("is-open", o);
+    header.classList.toggle("menu-open", o);
+    toggle.setAttribute("aria-expanded", o);
+    document.body.style.overflow = o ? "hidden" : "";
+  };
+  toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
+  $$("a", nav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
+})();
+
+// ================== TEXTO DIVIDIDO ==================
+$$("[data-split] .line").forEach((line) => {
+  line.innerHTML = `<span class="line__inner">${line.innerHTML}</span>`;
+});
+$$(".statement[data-words]").forEach((el) => {
+  el.innerHTML = el.textContent.trim().split(/\s+/).map((w) => `<span class="w">${w}</span>`).join(" ");
+});
+// Retrasos escalonados para elementos que entran juntos
+$$("[data-anim]").forEach((el) => {
+  const sibs = [...el.parentElement.children].filter((c) => c.hasAttribute("data-anim"));
+  const i = sibs.indexOf(el);
+  if (i > 0) el.style.transitionDelay = `${Math.min(i, 5) * 0.1}s`;
+});
+
+// ================== PANTALLA DE ENTRADA ==================
+(() => {
+  const hero = $(".hero");
+  let done = false;
+  const start = () => {
+    if (done) return;
+    done = true;
+    document.body.classList.add("loaded");
+    setTimeout(() => $$("[data-split], [data-anim], .reveal-img", hero).forEach((el) => el.classList.add("is-in")), 350);
+  };
+  const t0 = performance.now();
+  addEventListener("load", () => setTimeout(start, Math.max(0, 1100 - (performance.now() - t0))));
+  setTimeout(start, 2600);
+})();
+
+// ================== ANIMACIONES AL HACER SCROLL ==================
+(() => {
+  const els = $$("[data-split], [data-anim], .reveal-img").filter((el) => !el.closest(".hero"));
+  if (!("IntersectionObserver" in window)) return els.forEach((e) => e.classList.add("is-in"));
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+  }), { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+  els.forEach((e) => io.observe(e));
+})();
+
+// ================== SCROLL: PROGRESO, FRASE, MARQUEE ==================
+(() => {
+  const bar = $(".progress i");
+  const statement = $(".statement");
+  const words = statement ? $$(".w", statement) : [];
+  const track = $(".marquee__track");
+  let x = 0, lastY = scrollY, vel = 0;
+
+  const loop = () => {
+    const y = scrollY, vh = innerHeight;
+    const max = document.documentElement.scrollHeight - vh;
+    bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+
+    if (words.length) {
+      const r = statement.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.3)));
+      const on = Math.round(p * words.length);
+      words.forEach((w, i) => w.classList.toggle("on", i < on));
+    }
+
+    if (track && !reduceMotion) {
+      vel += (Math.abs(y - lastY) * 0.15 - vel) * 0.1;
+      x -= 0.6 + vel;
+      const half = track.scrollWidth / 2;
+      if (-x >= half) x += half;
+      track.style.transform = `translate3d(${x}px,0,0)`;
+    }
+    lastY = y;
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+// ================== CURSOR PERSONALIZADO + BOTONES MAGNÉTICOS ==================
+if (finePointer && !reduceMotion) {
+  document.documentElement.classList.add("cursor-on");
+  const ring = $(".cursor"), dot = $(".cursor-dot"), label = $(".cursor__label");
+  let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+  addEventListener("pointermove", (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate3d(${mx}px,${my}px,0)`;
+    const t = e.target.closest ? e.target : null;
+    const labeled = t && t.closest("[data-cursor]");
+    const text = labeled && labeled.getAttribute("data-cursor");
+    const link = t && t.closest("a, button, input, .chip, .day, .slot, .svc__row");
+    ring.classList.toggle("is-label", !!text && !t.closest("input"));
+    ring.classList.toggle("is-link", !text && !!link);
+    if (text) label.textContent = text;
+  });
+  document.addEventListener("pointerleave", () => ring.classList.add("is-hidden"));
+  document.addEventListener("pointerenter", () => ring.classList.remove("is-hidden"));
+  const follow = () => {
+    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+    ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+    requestAnimationFrame(follow);
+  };
+  follow();
+
+  $$(".magnetic").forEach((el) => {
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      el.style.transition = "transform 0.2s linear";
+      el.style.transform = `translate(${dx * 0.22}px, ${dy * 0.35}px)`;
+    });
+    el.addEventListener("pointerleave", () => {
+      el.style.transition = "transform 0.9s cubic-bezier(0.19,1,0.22,1)";
+      el.style.transform = "";
+    });
+  });
+}
+
+// ================== HERO: MANO ==================
+(() => {
+  const text = $(".hero__caption-text"), num = $(".hero__caption-num");
+  const defText = text.textContent;
+  let active = 0;
+  NailArt.buildHand($("#hand"), {
+    onChange: (design) => {
+      active += design ? 1 : -1;
+      if (design) {
+        const i = NailArt.DESIGNS.indexOf(design) + 1;
+        num.textContent = `Fig. ${pad(i)}`;
+        text.textContent = design.nombre;
+      } else if (active <= 0) {
+        active = 0;
+        num.textContent = "Fig. 01";
+        text.textContent = defText;
+      }
+    },
+  });
+})();
+
+// ================== RESERVAS ==================
+const Booking = (() => {
+  const form = $("#booking-form");
+  const chips = $("#service-chips"), daysEl = $("#days"), slotsEl = $("#slots");
+  const summary = $("#summary"), error = $(".form-error", form);
+  const state = { servicio: null, fecha: null, hora: null };
+
+  const radio = (el, group) => {
+    $$("[role=radio]", group).forEach((b) => b.setAttribute("aria-checked", "false"));
+    el.setAttribute("aria-checked", "true");
+  };
+  const mkBtn = (cls, html) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = cls; b.innerHTML = html;
+    b.setAttribute("role", "radio"); b.setAttribute("aria-checked", "false");
+    return b;
+  };
+
+  SERVICIOS.forEach((s) => {
+    const b = mkBtn("chip", s.nombre);
+    b.addEventListener("click", () => { radio(b, chips); state.servicio = s.nombre; update(); });
+    chips.appendChild(b);
+  });
+
+  function disponibles(d) {
+    const horas = HORARIOS[d.getDay()] || [];
+    if (iso(d) !== iso(new Date())) return horas;
+    const now = new Date(), min = now.getHours() * 60 + now.getMinutes() + 30;
+    return horas.filter((h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b > min; });
+  }
+
+  const fmtDia = new Intl.DateTimeFormat("es-BO", { weekday: "short" });
+  const fmtMes = new Intl.DateTimeFormat("es-BO", { month: "short" });
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  for (let i = 0; i < DIAS_VISIBLES; i++) {
+    const d = new Date(hoy); d.setDate(hoy.getDate() + i);
+    const b = mkBtn("day", `<small>${i === 0 ? "Hoy" : fmtDia.format(d).replace(".", "")}</small><strong>${d.getDate()}</strong><small>${fmtMes.format(d).replace(".", "")}</small>`);
+    b.setAttribute("aria-label", d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" }));
+    b.disabled = !disponibles(d).length;
+    b.addEventListener("click", () => { radio(b, daysEl); state.fecha = d; state.hora = null; renderSlots(); update(); });
+    daysEl.appendChild(b);
+  }
+  $$(".days-nav").forEach((btn) => btn.addEventListener("click", () => {
+    daysEl.scrollBy({ left: Number(btn.dataset.dir) * daysEl.clientWidth * 0.8, behavior: "smooth" });
+  }));
+
+  function renderSlots() {
+    slotsEl.innerHTML = "";
+    if (!state.fecha) { slotsEl.innerHTML = `<p class="slots__empty">Primero elige una fecha.</p>`; return; }
+    const libres = disponibles(state.fecha);
+    (HORARIOS[state.fecha.getDay()] || []).forEach((h, i) => {
+      const b = mkBtn("slot", `${h}<small>hasta ${addMin(h, DURACION_CITA)}</small>`);
+      b.style.animationDelay = `${i * 0.05}s`;
+      b.disabled = !libres.includes(h);
+      b.addEventListener("click", () => { radio(b, slotsEl); state.hora = h; update(); });
+      slotsEl.appendChild(b);
+    });
+  }
+  renderSlots();
+
+  const fechaLarga = (d) => d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" });
+  function update() {
+    error.hidden = true;
+    const { servicio, fecha, hora } = state;
+    if (servicio && fecha && hora) {
+      summary.textContent = `${servicio} — ${fechaLarga(fecha)}, ${hora}`;
+      summary.classList.add("is-ready");
+    } else {
+      const falta = [!servicio && "servicio", !fecha && "fecha", !hora && "hora"].filter(Boolean);
+      summary.textContent = `Falta elegir: ${falta.join(", ")}.`;
+      summary.classList.remove("is-ready");
+    }
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nombre = form.elements.nombre.value.trim();
+    const nota = form.elements.nota.value.trim();
+    const msg = !state.servicio ? "Elige un servicio." : !state.fecha ? "Elige una fecha." : !state.hora ? "Elige una hora." : !nombre ? "Escribe tu nombre." : "";
+    if (msg) {
+      error.textContent = msg; error.hidden = false;
+      if (!nombre && state.hora) form.elements.nombre.focus();
+      return;
+    }
+    openWhatsApp(
+      `Hola Dani ✨ Me gustaría reservar una cita:\n\n` +
+      `• Nombre: ${nombre}\n• Servicio: ${state.servicio}\n• Fecha: ${fechaLarga(state.fecha)}\n` +
+      `• Hora: ${state.hora} – ${addMin(state.hora, DURACION_CITA)}` +
+      (nota ? `\n• Detalles: ${nota}` : "") + `\n\n¿Está disponible? Gracias 💅`
+    );
+    toast("Te llevamos a WhatsApp para confirmar tu cita ✨");
+  });
+
+  return {
+    elegir(servicio, nota) {
+      const i = SERVICIOS.findIndex((s) => s.nombre === servicio);
+      if (i >= 0) $$(".chip", chips)[i].click();
+      if (nota) form.elements.nota.value = nota;
+      $("#reservar").scrollIntoView({ behavior: "smooth" });
+    },
+  };
+})();
+
+// ================== SERVICIOS ==================
+(() => {
+  const list = $("#services-list");
+  SERVICIOS.forEach((s, i) => {
+    const li = document.createElement("li");
+    li.className = "svc__row";
+    li.tabIndex = 0;
+    li.setAttribute("data-anim", "fade");
+    li.setAttribute("data-cursor", "Reservar");
+    li.innerHTML = `
+      <span class="svc__num">${pad(i + 1)}</span>
+      <span class="svc__name">${s.nombre}</span>
+      <span class="svc__desc">${s.desc}</span>
+      <span class="svc__price">${precioTxt(s.precio)}<small>aprox. 1 h 30 min</small></span>
+      <span class="svc__go" aria-hidden="true">→</span>`;
+    const go = () => Booking.elegir(s.nombre);
+    li.addEventListener("click", go);
+    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    list.appendChild(li);
+  });
+})();
+
+// ================== DISEÑOS (carrusel arrastrable) ==================
+(() => {
+  const rail = $("#designs-rail"), bar = $(".rail-progress i");
+  NailArt.DESIGNS.forEach((d, i) => {
+    const card = document.createElement("article");
+    card.className = "look";
+    card.innerHTML = `
+      <div class="look__img"><svg aria-hidden="true"></svg><span class="look__num">N.º ${pad(i + 1)}</span></div>
+      <div class="look__body">
+        <div><h3>${d.nombre}</h3><p>${d.desc}</p></div>
+        <button class="btn btn--line" type="button">Lo quiero</button>
+      </div>`;
+    NailArt.renderCard($("svg", card), d.id);
+    $("button", card).addEventListener("click", () => { if (!moved) Booking.elegir("Nail art", `Diseño: ${d.nombre}`); });
+    rail.appendChild(card);
+  });
+
+  const upd = () => {
+    const max = rail.scrollWidth - rail.clientWidth;
+    const vis = rail.clientWidth / rail.scrollWidth;
+    bar.style.transform = `translateX(${max > 0 ? (rail.scrollLeft / max) * (1 - vis) * 100 : 0}%) scaleX(${vis})`;
+    bar.style.transformOrigin = "left";
+  };
+  bar.style.width = "100%";
+  rail.addEventListener("scroll", upd, { passive: true });
+  addEventListener("resize", upd);
+  upd();
+
+  // Arrastrar con el ratón
+  let down = false, startX = 0, startL = 0, moved = false;
+  rail.addEventListener("pointerdown", (e) => {
+    if (e.pointerType !== "mouse") return;
+    down = true; moved = false; startX = e.clientX; startL = rail.scrollLeft;
+  });
+  addEventListener("pointermove", (e) => {
+    if (!down) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 5) { moved = true; rail.classList.add("is-drag"); }
+    rail.scrollLeft = startL - dx;
+  });
+  addEventListener("pointerup", () => {
+    if (!down) return;
+    down = false;
+    rail.classList.remove("is-drag");
+    setTimeout(() => (moved = false), 0);
+  });
+})();
 // ================== TIENDA + CARRITO ==================
 (() => {
   const grid = $("#products"), filters = $("#filters");
@@ -327,12 +474,12 @@ function productArt([kind, color = "#e8b4a6"]) {
   let cart = store.get("estacion-cart-v2", {});
   for (const id in cart) if (!byId[id]) delete cart[id];
 
-  // Filtros
   ["Todos", ...new Set(PRODUCTOS.map((p) => p.cat))].forEach((c, i) => {
     const b = document.createElement("button");
     b.type = "button"; b.className = "chip"; b.textContent = c;
-    b.setAttribute("role", "tab"); b.setAttribute("aria-selected", i === 0);
-    b.setAttribute("aria-checked", i === 0);
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", String(i === 0));
+    b.setAttribute("aria-checked", String(i === 0));
     b.addEventListener("click", () => {
       $$(".chip", filters).forEach((x) => { x.setAttribute("aria-checked", "false"); x.setAttribute("aria-selected", "false"); });
       b.setAttribute("aria-checked", "true"); b.setAttribute("aria-selected", "true");
@@ -341,14 +488,18 @@ function productArt([kind, color = "#e8b4a6"]) {
     filters.appendChild(b);
   });
 
+  const drawer = $(".drawer"), overlay = $(".drawer-overlay");
+  const itemsEl = $("#cart-items"), totalEl = $("#cart-total"), checkout = $("#cart-checkout"), count = $(".cart-count");
+
   PRODUCTOS.forEach((p, i) => {
     const card = document.createElement("article");
-    card.className = "product reveal";
+    card.className = "product";
     card.dataset.cat = p.cat;
-    card.style.transitionDelay = `${(i % 4) * 80}ms`;
+    card.setAttribute("data-anim", "fade");
+    card.style.transitionDelay = `${(i % 4) * 0.1}s`;
     card.innerHTML = `
       <div class="product__art">${productArt(p.art)}
-        <button class="btn btn--gold btn--sm product__add" type="button">Añadir al pedido</button>
+        <button class="btn btn--ink btn--sm product__add" type="button">Añadir al pedido</button>
       </div>
       <div class="product__body">
         <div><h3>${p.nombre}</h3><span class="product__cat">${p.cat}</span></div>
@@ -357,20 +508,33 @@ function productArt([kind, color = "#e8b4a6"]) {
     $("button", card).addEventListener("click", () => {
       cart[p.id] = (cart[p.id] || 0) + 1;
       save();
-      const c = $(".cart-count"); c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump");
+      count.classList.remove("bump"); void count.offsetWidth; count.classList.add("bump");
       toast(`${p.nombre} añadido a tu pedido`);
     });
+    // Inclinación 3D
+    const art = $(".product__art", card);
+    if (finePointer && !reduceMotion) {
+      art.addEventListener("pointermove", (e) => {
+        const r = art.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+        art.style.transition = "transform 0.15s linear, background 0.6s";
+        art.style.transform = `perspective(900px) rotateY(${px * 10}deg) rotateX(${-py * 10}deg)`;
+      });
+      art.addEventListener("pointerleave", () => {
+        art.style.transition = "";
+        art.style.transform = "";
+      });
+    }
     grid.appendChild(card);
   });
 
-  const drawer = $(".drawer"), overlay = $(".drawer-overlay");
-  const itemsEl = $("#cart-items"), totalEl = $("#cart-total"), checkout = $("#cart-checkout"), count = $(".cart-count");
   const save = () => { store.set("estacion-cart-v2", cart); render(); };
 
   function render() {
     const ids = Object.keys(cart);
     const n = ids.reduce((a, id) => a + cart[id], 0);
-    count.textContent = n; count.hidden = !n;
+    count.textContent = n;
+    count.classList.toggle("has", n > 0);
     itemsEl.innerHTML = "";
     checkout.disabled = !ids.length;
     if (!ids.length) {
@@ -408,16 +572,6 @@ function productArt([kind, color = "#e8b4a6"]) {
     openWhatsApp(`Hola Dani ✨ Quisiera hacer este pedido:\n\n${lines}\n\n¿Me confirmas precios y disponibilidad? Gracias 💅`);
   });
   render();
-})();
-
-// ================== ANIMACIONES DE ENTRADA ==================
-(() => {
-  const els = $$(".reveal");
-  if (!("IntersectionObserver" in window)) return els.forEach((e) => e.classList.add("is-in"));
-  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
-  }), { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-  els.forEach((e) => io.observe(e));
 })();
 
 $("#year").textContent = new Date().getFullYear();
