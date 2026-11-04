@@ -146,7 +146,6 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const onScroll = () => {
     const y = scrollY;
     header.classList.toggle("is-scrolled", y > 20);
-    header.classList.toggle("is-hidden", y > 400 && y > lastY && !header.classList.contains("menu-open"));
     lastY = y;
   };
   addEventListener("scroll", onScroll, { passive: true });
@@ -251,11 +250,13 @@ if (finePointer && !reduceMotion) {
       active += design ? 1 : -1;
       if (design) {
         const i = NailArt.DESIGNS.indexOf(design) + 1;
-        num.textContent = `Fig. ${pad(i)}`;
+        num.textContent = `Diseño N.º ${pad(i)}`;
+        num.parentElement.parentElement.classList.add("is-active");
         text.textContent = design.nombre;
       } else if (active <= 0) {
         active = 0;
-        num.textContent = "Fig. 01";
+        num.textContent = "Diseño";
+        num.parentElement.parentElement.classList.remove("is-active");
         text.textContent = defText;
       }
     },
@@ -367,22 +368,28 @@ const Booking = (() => {
 
 // ================== SERVICIOS ==================
 (() => {
+  const ICONOS = ["💅", "✨", "🌸", "💎", "🎨", "🧴"];
   const list = $("#services-list");
   SERVICIOS.forEach((s, i) => {
-    const li = document.createElement("li");
-    li.className = "svc__row";
-    li.tabIndex = 0;
-    li.setAttribute("data-anim", "fade");
-    li.innerHTML = `
-      <span class="svc__num">${pad(i + 1)}</span>
-      <span class="svc__name">${s.nombre}</span>
-      <span class="svc__desc">${s.desc}</span>
-      <span class="svc__price">${precioTxt(s.precio)}<small>aprox. 1 h 30 min</small></span>
-      <span class="svc__go" aria-hidden="true">→</span>`;
+    const card = document.createElement("article");
+    card.className = "service";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Reservar ${s.nombre}`);
+    card.setAttribute("data-anim", "fade");
+    card.style.transitionDelay = `${(i % 3) * 0.08}s`;
+    card.innerHTML = `
+      <div class="service__top"><span class="service__icon" aria-hidden="true">${ICONOS[i % ICONOS.length]}</span><span class="service__num">${pad(i + 1)}</span></div>
+      <h3>${s.nombre}</h3>
+      <p>${s.desc}</p>
+      <div class="service__foot">
+        <span class="service__meta">⏱ 1 h 30 min · <strong>${precioTxt(s.precio)}</strong></span>
+        <span class="service__go">Reservar</span>
+      </div>`;
     const go = () => Booking.elegir(s.nombre);
-    li.addEventListener("click", go);
-    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
-    list.appendChild(li);
+    card.addEventListener("click", go);
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    list.appendChild(card);
   });
 })();
 
@@ -396,7 +403,7 @@ const Booking = (() => {
       <div class="look__img"><svg aria-hidden="true"></svg><span class="look__num">N.º ${pad(i + 1)}</span></div>
       <div class="look__body">
         <div><h3>${d.nombre}</h3><p>${d.desc}</p></div>
-        <button class="btn btn--line" type="button">Lo quiero</button>
+        <button class="btn btn--dark" type="button">Lo quiero</button>
       </div>`;
     NailArt.renderCard($("svg", card), d.id);
     $("button", card).addEventListener("click", () => { if (!moved) Booking.elegir("Nail art", `Diseño: ${d.nombre}`); });
@@ -465,7 +472,7 @@ const Booking = (() => {
     card.style.transitionDelay = `${(i % 4) * 0.1}s`;
     card.innerHTML = `
       <div class="product__art">${productArt(p.art)}
-        <button class="btn btn--ink btn--sm product__add" type="button">Añadir al pedido</button>
+        <button class="btn btn--dark btn--sm product__add" type="button">Añadir al pedido</button>
       </div>
       <div class="product__body">
         <div><h3>${p.nombre}</h3><span class="product__cat">${p.cat}</span></div>
