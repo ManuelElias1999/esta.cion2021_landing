@@ -202,7 +202,7 @@ $$("[data-anim]").forEach((el) => {
   const loop = () => {
     const y = scrollY, vh = innerHeight;
     const max = document.documentElement.scrollHeight - vh;
-    bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
 
     if (words.length) {
       const r = statement.getBoundingClientRect();
