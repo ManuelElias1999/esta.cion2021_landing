@@ -173,7 +173,7 @@ $$(".statement[data-words]").forEach((el) => {
 $$("[data-anim]").forEach((el) => {
   const sibs = [...el.parentElement.children].filter((c) => c.hasAttribute("data-anim"));
   const i = sibs.indexOf(el);
-  if (i > 0) el.style.transitionDelay = `${Math.min(i, 5) * 0.1}s`;
+  if (i > 0) el.style.transitionDelay = `${Math.min(i, 3) * 0.1}s`;
 });
 
 // ================== PANTALLA DE ENTRADA ==================
@@ -184,11 +184,11 @@ $$("[data-anim]").forEach((el) => {
     if (done) return;
     done = true;
     document.body.classList.add("loaded");
-    setTimeout(() => $$("[data-split], [data-anim], .reveal-img", hero).forEach((el) => el.classList.add("is-in")), 350);
+    $$("[data-split], [data-anim], .reveal-img", hero).forEach((el) => el.classList.add("is-in"));
   };
-  const t0 = performance.now();
-  addEventListener("load", () => setTimeout(start, Math.max(0, 1100 - (performance.now() - t0))));
-  setTimeout(start, 2600);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+  setTimeout(start, 800);
 })();
 
 // ================== SCROLL: PROGRESO, FRASE, MARQUEE ==================

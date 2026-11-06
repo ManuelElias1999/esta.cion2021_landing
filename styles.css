@@ -61,7 +61,7 @@ button { font: inherit; color: inherit; }
 .link:hover::after { transform: scaleX(0.3); }
 
 /* ---------- Animaciones ---------- */
-.js [data-anim="fade"] { opacity: 0; transition: opacity 0.8s ease; }
+.js [data-anim="fade"] { opacity: 0; transition: opacity 0.5s ease; }
 .js [data-anim="fade"].is-in { opacity: 1; }
 .progress { display: none; position: fixed; inset: 0 0 auto; height: 2px; z-index: 120; pointer-events: none; }
 .progress i { display: block; height: 100%; background: var(--taupe); transform-origin: left; transform: scaleX(0); }
@@ -104,7 +104,7 @@ button { font: inherit; color: inherit; }
 
 .hero__media { position: relative; margin: 0; overflow: hidden; background: var(--nude-2); }
 .hero__photo { position: absolute; inset: 0; }
-.hand { display: block; width: 100%; height: 100%; animation: kenburns 2.4s var(--ease) both; }
+.hand { display: block; width: 100%; height: 100%; animation: kenburns 1s var(--ease) both; }
 @keyframes kenburns { from { transform: scale(1.08); } }
 .hand .nail { cursor: pointer; outline: none; }
 .hand .twinkle { opacity: 0; transform-box: fill-box; transform-origin: center; }
