@@ -451,6 +451,11 @@ const Booking = (() => {
   const grid = $("#products"), filters = $("#filters");
   const byId = Object.fromEntries(PRODUCTOS.map((p) => [p.id, p]));
   let cart = store.get("estacion-cart-v2", {});
+  // Quitar productos que ya no existen o cantidades inválidas (evita errores al abrir el pedido)
+  if (typeof cart !== "object" || cart === null || Array.isArray(cart)) cart = {};
+  for (const id of Object.keys(cart)) {
+    if (!byId[id] || !(Number.isInteger(cart[id]) && cart[id] > 0)) delete cart[id];
+  }
   for (const id in cart) if (!byId[id]) delete cart[id];
 
   ["Todos", ...new Set(PRODUCTOS.map((p) => p.cat))].forEach((c, i) => {
