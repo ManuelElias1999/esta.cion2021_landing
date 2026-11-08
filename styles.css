@@ -258,6 +258,8 @@ main:focus { outline: none; }
 .footer__links a { text-decoration: none; font: 500 0.76rem/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase; }
 .footer__links a:hover { color: var(--muted); }
 .footer p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.footer__top { color: var(--text); text-decoration: none; }
+.footer__top:hover { text-decoration: underline; }
 
 /* WhatsApp */
 .wa-float { position: fixed; right: 24px; bottom: 24px; z-index: 55; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.45); transition: transform 0.4s var(--ease); }
