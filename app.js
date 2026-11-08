@@ -160,6 +160,11 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   };
   toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
   $$("a", nav).forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  // Cerrar el menú con Escape o al pasar a pantalla de escritorio
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav.classList.contains("is-open")) { setOpen(false); toggle.focus(); }
+  });
+  matchMedia("(min-width: 961px)").addEventListener("change", (e) => e.matches && setOpen(false));
 })();
 
 // ================== TEXTO DIVIDIDO ==================
