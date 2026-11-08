@@ -262,6 +262,7 @@ main:focus { outline: none; }
 /* WhatsApp */
 .wa-float { position: fixed; right: 24px; bottom: 24px; z-index: 55; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.45); transition: transform 0.4s var(--ease); }
 .wa-float:hover { transform: scale(1.08); }
+body.cart-open .wa-float { opacity: 0; pointer-events: none; }
 .wa-float svg { width: 28px; height: 28px; }
 
 /* Carrito */

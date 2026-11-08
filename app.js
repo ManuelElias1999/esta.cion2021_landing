@@ -565,12 +565,14 @@ const Booking = (() => {
   const open = () => {
     drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); overlay.hidden = false;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("cart-open");
     $(".drawer__close").focus();
   };
   const close = () => {
     if (!isOpen()) return;
     drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); overlay.hidden = true;
     document.body.style.overflow = "";
+    document.body.classList.remove("cart-open");
     cartBtn.focus(); // devolver el foco a donde estaba
   };
   cartBtn.addEventListener("click", open);
