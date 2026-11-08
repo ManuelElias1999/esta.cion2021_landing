@@ -8,6 +8,8 @@ Landing page de **Estación de uñas**, especialista en uñas acrílicas en Coch
 
 - **Accesible y optimizado**: enlace «Saltar al contenido», menú que marca la sección actual y se cierra con Escape, datos estructurados para Google (`NailSalon`), vista previa al compartir, foto de portada precargada y logo liviano (`assets/logo-sm.png`).
 
+- **Detalles de uso**: la reserva recuerda el nombre de la clienta, el carrito avisa cuántos productos tiene, horario de atención en Contacto, enlace para llamar y «Volver arriba».
+
 Sitio estático (HTML + CSS + JS), sin dependencias. Para verlo en local:
 
 ```bash
@@ -16,7 +18,7 @@ python3 -m http.server 8080   # y abre http://localhost:8080
 
 ## Editar contenido
 Al inicio de `app.js`:
-- `HORARIOS`: horas de inicio por día.
+- `HORARIOS`: horas de inicio por día. Si los cambias, actualiza también el horario de «Contacto» y `openingHoursSpecification` en `index.html`.
 - `SERVICIOS` y `PRODUCTOS`: nombres, descripciones y precios (`null` = "Consultar").
 - `WHATSAPP`: número para reservas y pedidos.
 
