@@ -343,6 +343,10 @@ const Booking = (() => {
     }
   }
 
+  // Recordar el nombre de la última reserva (solo en este navegador)
+  const nombreGuardado = store.get("estacion-nombre", "");
+  if (typeof nombreGuardado === "string") form.elements.nombre.value = nombreGuardado;
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nombre = form.elements.nombre.value.trim();
@@ -353,6 +357,7 @@ const Booking = (() => {
       if (!nombre && state.hora) form.elements.nombre.focus();
       return;
     }
+    store.set("estacion-nombre", nombre);
     openWhatsApp(
       `Hola Dani ✨ Me gustaría reservar una cita:\n\n` +
       `• Nombre: ${nombre}\n• Servicio: ${state.servicio}\n• Fecha: ${fechaLarga(state.fecha)}\n` +
