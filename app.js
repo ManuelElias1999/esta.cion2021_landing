@@ -519,6 +519,7 @@ const Booking = (() => {
     const n = ids.reduce((a, id) => a + cart[id], 0);
     count.textContent = n;
     count.classList.toggle("has", n > 0);
+    $(".cart-btn").setAttribute("aria-label", n ? `Ver tu pedido (${n} ${n === 1 ? "producto" : "productos"})` : "Ver tu pedido (vacío)");
     itemsEl.innerHTML = "";
     checkout.disabled = !ids.length;
     if (!ids.length) {
