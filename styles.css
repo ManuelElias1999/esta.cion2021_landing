@@ -80,7 +80,7 @@ main:focus { outline: none; }
 .nav { display: flex; gap: 34px; }
 .nav a { position: relative; padding: 6px 0; text-decoration: none; font: 500 0.8rem/1 var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: var(--black); }
 .nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--taupe); transform: scaleX(0); transition: transform 0.5s var(--ease); }
-.nav a:hover::after { transform: scaleX(1); }
+.nav a:hover::after, .nav a[aria-current]::after { transform: scaleX(1); }
 .header__actions { display: flex; align-items: center; gap: 18px; }
 .cart-btn { position: relative; width: 42px; height: 42px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; color: var(--black); }
 .cart-btn svg { width: 24px; height: 24px; }

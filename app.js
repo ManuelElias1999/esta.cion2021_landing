@@ -566,3 +566,17 @@ $("#year").textContent = new Date().getFullYear();
   els.forEach((e) => io.observe(e));
 })();
 
+// ================== MENÚ: SECCIÓN ACTUAL ==================
+(() => {
+  const links = $$('.nav a[href^="#"]');
+  const byId = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
+  const sections = [...byId.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+  if (!("IntersectionObserver" in window) || !sections.length) return;
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    links.forEach((a) => a.removeAttribute("aria-current"));
+    byId.get(e.target.id).setAttribute("aria-current", "true");
+  }), { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach((s) => io.observe(s));
+})();
+
