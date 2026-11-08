@@ -314,6 +314,15 @@ const Booking = (() => {
   $$(".days-nav").forEach((btn) => btn.addEventListener("click", () => {
     daysEl.scrollBy({ left: Number(btn.dataset.dir) * daysEl.clientWidth * 0.8, behavior: "smooth" });
   }));
+  // Desactivar las flechas cuando ya no hay más días hacia ese lado
+  const [prevDays, nextDays] = $$(".days-nav");
+  const syncDaysNav = () => {
+    prevDays.disabled = daysEl.scrollLeft <= 2;
+    nextDays.disabled = daysEl.scrollLeft + daysEl.clientWidth >= daysEl.scrollWidth - 2;
+  };
+  daysEl.addEventListener("scroll", syncDaysNav, { passive: true });
+  addEventListener("resize", syncDaysNav);
+  syncDaysNav();
 
   function renderSlots() {
     slotsEl.innerHTML = "";
