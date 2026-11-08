@@ -6,6 +6,8 @@ Landing page de **Estación de uñas**, especialista en uñas acrílicas en Coch
 - **Reservas**: servicio, fecha, hora (bloques de 1 h 30 min) y confirmación por WhatsApp.
 - **Colección de diseños**, **menú de servicios**, **tienda** con carrito (pedido por WhatsApp), redes y mapa.
 
+- **Accesible y optimizado**: enlace «Saltar al contenido», menú que marca la sección actual y se cierra con Escape, datos estructurados para Google (`NailSalon`), vista previa al compartir, foto de portada precargada y logo liviano (`assets/logo-sm.png`).
+
 Sitio estático (HTML + CSS + JS), sin dependencias. Para verlo en local:
 
 ```bash
