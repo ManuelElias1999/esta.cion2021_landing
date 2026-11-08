@@ -545,9 +545,20 @@ const Booking = (() => {
     totalEl.innerHTML = `<span>Total</span><strong>${txt}</strong>`;
   }
 
-  const open = () => { drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); overlay.hidden = false; $(".drawer__close").focus(); };
-  const close = () => { drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); overlay.hidden = true; };
-  $(".cart-btn").addEventListener("click", open);
+  const cartBtn = $(".cart-btn");
+  const isOpen = () => drawer.classList.contains("is-open");
+  const open = () => {
+    drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    $(".drawer__close").focus();
+  };
+  const close = () => {
+    if (!isOpen()) return;
+    drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); overlay.hidden = true;
+    document.body.style.overflow = "";
+    cartBtn.focus(); // devolver el foco a donde estaba
+  };
+  cartBtn.addEventListener("click", open);
   $(".drawer__close").addEventListener("click", close);
   overlay.addEventListener("click", close);
   addEventListener("keydown", (e) => e.key === "Escape" && close());
