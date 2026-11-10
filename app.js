@@ -363,7 +363,12 @@ const Booking = (() => {
     const msg = !state.servicio ? "Elige un servicio." : !state.fecha ? "Elige una fecha." : !state.hora ? "Elige una hora." : !nombre ? "Escribe tu nombre." : "";
     if (msg) {
       error.textContent = msg; error.hidden = false;
-      if (!nombre && state.hora) form.elements.nombre.focus();
+      // Llevar a la clienta al paso que le falta
+      const target = !state.servicio ? $(".chip", chips)
+        : !state.fecha ? $(".day:not(:disabled)", daysEl)
+        : !state.hora ? $(".slot:not(:disabled)", slotsEl)
+        : form.elements.nombre;
+      if (target) target.focus();
       return;
     }
     store.set("estacion-nombre", nombre);
