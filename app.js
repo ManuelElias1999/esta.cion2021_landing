@@ -477,12 +477,10 @@ const Booking = (() => {
   ["Todos", ...new Set(PRODUCTOS.map((p) => p.cat))].forEach((c, i) => {
     const b = document.createElement("button");
     b.type = "button"; b.className = "chip"; b.textContent = c;
-    b.setAttribute("role", "tab");
-    b.setAttribute("aria-selected", String(i === 0));
-    b.setAttribute("aria-checked", String(i === 0));
+    b.setAttribute("aria-pressed", String(i === 0));
     b.addEventListener("click", () => {
-      $$(".chip", filters).forEach((x) => { x.setAttribute("aria-checked", "false"); x.setAttribute("aria-selected", "false"); });
-      b.setAttribute("aria-checked", "true"); b.setAttribute("aria-selected", "true");
+      $$(".chip", filters).forEach((x) => x.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
       $$(".product", grid).forEach((el) => el.classList.toggle("is-hidden", c !== "Todos" && el.dataset.cat !== c));
     });
     filters.appendChild(b);
