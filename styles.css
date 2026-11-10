@@ -351,3 +351,10 @@ body.cart-open .wa-float { opacity: 0; pointer-events: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .js [data-anim="fade"] { opacity: 1; transform: none; }
 }
+@media print {
+  .header, .skip-link, .wa-float, .drawer, .drawer-overlay, .toast, .contact__map, .days-nav { display: none !important; }
+  main { margin-top: 0; }
+  .hero { margin-top: 0; }
+  .js [data-anim], .js [data-split] .line__inner { opacity: 1 !important; transform: none !important; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
+}
