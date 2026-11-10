@@ -395,6 +395,8 @@ const Booking = (() => {
     card.className = "service";
     card.tabIndex = 0;
     card.setAttribute("role", "button");
+    card.tabIndex = 0;
+    card.setAttribute("aria-label", `Reservar ${s.nombre}`);
     card.setAttribute("aria-label", `Reservar ${s.nombre}`);
     card.setAttribute("data-anim", "fade");
     card.style.transitionDelay = `${(i % 3) * 0.08}s`;
