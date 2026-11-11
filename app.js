@@ -306,8 +306,10 @@ const Booking = (() => {
   for (let i = 0; i < DIAS_VISIBLES; i++) {
     const d = new Date(hoy); d.setDate(hoy.getDate() + i);
     const b = mkBtn("day", `<small>${i === 0 ? "Hoy" : fmtDia.format(d).replace(".", "")}</small><strong>${d.getDate()}</strong><small>${fmtMes.format(d).replace(".", "")}</small>`);
-    b.setAttribute("aria-label", d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" }));
     b.disabled = !disponibles(d).length;
+    const etiqueta = d.toLocaleDateString("es-BO", { weekday: "long", day: "numeric", month: "long" });
+    b.setAttribute("aria-label", b.disabled ? `${etiqueta} (sin horarios)` : etiqueta);
+    if (b.disabled) b.title = "Sin horarios disponibles";
     b.addEventListener("click", () => { radio(b, daysEl); state.fecha = d; state.hora = null; renderSlots(); update(); });
     daysEl.appendChild(b);
   }
