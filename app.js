@@ -430,7 +430,7 @@ const Booking = (() => {
       <div class="look__img"><svg aria-hidden="true"></svg><span class="look__num">N.º ${pad(i + 1)}</span></div>
       <div class="look__body">
         <div><h3>${d.nombre}</h3><p>${d.desc}</p></div>
-        <button class="btn btn--dark" type="button">Lo quiero</button>
+        <button class="btn btn--dark" type="button" aria-label="Lo quiero: reservar el diseño ${d.nombre}">Lo quiero</button>
       </div>`;
     NailArt.renderCard($("svg", card), d.id);
     $("button", card).addEventListener("click", () => { if (!moved) Booking.elegir("Nail art", `Diseño: ${d.nombre}`); });
