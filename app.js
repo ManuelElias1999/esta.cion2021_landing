@@ -502,7 +502,7 @@ const Booking = (() => {
     card.style.transitionDelay = `${(i % 4) * 0.1}s`;
     card.innerHTML = `
       <div class="product__art">${productArt(p.art)}
-        <button class="btn btn--dark btn--sm product__add" type="button">Añadir al pedido</button>
+        <button class="btn btn--dark btn--sm product__add" type="button" aria-label="Añadir ${p.nombre} al pedido">Añadir al pedido</button>
       </div>
       <div class="product__body">
         <div><h3>${p.nombre}</h3><span class="product__cat">${p.cat}</span></div>
