@@ -334,6 +334,8 @@ const Booking = (() => {
       const b = mkBtn("slot", `${h}<small>hasta ${addMin(h, DURACION_CITA)}</small>`);
       b.style.animationDelay = `${i * 0.05}s`;
       b.disabled = !libres.includes(h);
+      b.setAttribute("aria-label", `${h} a ${addMin(h, DURACION_CITA)}${b.disabled ? " (ya pasó)" : ""}`);
+      if (b.disabled) b.title = "Este horario ya pasó";
       b.addEventListener("click", () => { radio(b, slotsEl); state.hora = h; update(); });
       slotsEl.appendChild(b);
     });
